@@ -6,13 +6,13 @@
   "description": "",
   "homepage_url": "https://github.com/behjieshen/neutrify",
   "icons": {
-    "48": "icons/icon-48.png"
+    "48": "images/extension-48.png"
   },
 
   "permissions": ["activeTab"],
 
   "browser_action": {
-    "default_icon": "icons/icon-48.png",
+    "default_icon": "images/extension-48.png",
     "default_title": "Neutrify",
     "default_popup": "index.html"
   },
