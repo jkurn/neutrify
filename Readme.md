@@ -16,7 +16,7 @@ Tech Stack: React.js,
 yarn install
 ```
 
-2. Make sure that your environment variables are installed by placing them into .env.local. This is to ensure that the mock db runs.
+2. Make sure that your environment variables are installed by placing them into a file called ".env". This is to ensure that the mock db runs.
 
 3. Once all is done, run
 
