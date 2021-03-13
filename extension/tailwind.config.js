@@ -5,7 +5,9 @@ module.exports = {
     extend: {
       fontSize: {
         "2xs": "0.625rem",
+        "2.5xs": "0.575rem",
         "3xs": "0.5rem",
+        "4xs": "0.45rem",
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
