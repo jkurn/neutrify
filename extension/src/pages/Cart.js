@@ -69,8 +69,46 @@ const ProducedExpr = styled.div`
 const TotalContainer = styled.div`
   background: #ECECEC;
   margin-top: 15px;
+  margin-bottom: 15px;
   padding: 8px;
   height: 80px;
+`;
+
+const AltContainer = styled.div`
+  border-radius: 5px;
+  background: #F4F7FB;
+  border: 2px solid #86BDA6;
+  border-collapse: separate;
+  border-spacing: 15px;
+  margin: 5px 10px 5px 10px;
+  height: 34px;
+`;
+
+const AltItem = styled.div`
+  margin: 5px 5px 5px 10px;
+  font-size: 13px;
+  font-weight: 500;
+`;
+
+const AltItemDesc = styled.div`
+  font-size: 10px;
+  margin: 8px 5px 5px 1px;
+`;
+
+const AddToCartButton = styled.button`
+  background-color: #26BD58;
+  border-radius: 3px;
+  position: absolute;
+  right: 0;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 550;
+  margin-top: 5px;
+  margin-right: 19px;
+  width: 90px;
+  height: 20px;
 `;
 
 function Cart() {
@@ -116,6 +154,26 @@ function Cart() {
             <ProducedExpr>produced</ProducedExpr>
           </div>
         </TotalContainer>
+
+        <h1 className="text-2xs font-semibold ml-2 text-n-green">SUGGESTED ALTERNATIVES</h1>
+        <div className="flex">
+          <img src="/images/c02.svg" alt="CO2" className="-mt-3 ml-2"/>
+          <h1 className="text-sm font-medium ml-1 mb-4 text-n-aquablue">124 shoppers have shopped carbon</h1>
+        </div>
+        <h1 className="text-sm font-medium -mt-4 ml-2 mb-1 text-n-aquablue">conscious!</h1>
+        <AltContainer className="flex">
+          <ImageContainer src="/images/fish.svg" alt="fish" />
+          <AltItem>Salmon</AltItem>
+          <AltItemDesc>(Local)</AltItemDesc>
+          <AddToCartButton>ADD TO CART</AddToCartButton>
+        </AltContainer>
+
+        <AltContainer className="flex">
+          <ImageContainer src="/images/vegetable.svg" alt="vegetable"/>
+          <AltItem>Beyond Meat</AltItem>
+          <AddToCartButton>ADD TO CART</AddToCartButton>
+        </AltContainer>
+
     </CartContainer>
 
   );
