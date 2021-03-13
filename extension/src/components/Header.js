@@ -5,6 +5,7 @@ const HeaderContainer = styled.div`
   padding: 10px;
   border-bottom: 2px solid #ececec;
 `;
+
 const ProgressLiquid = styled.div`
   background: #f4f7fb;
   border: 1px solid rgba(157, 171, 187, 0.3);
@@ -18,6 +19,7 @@ const CloseIcon = styled.img`
   top: 18px;
   right: 10px;
 `;
+
 
 function Header() {
   return (

@@ -1,26 +1,32 @@
 {
   "manifest_version": 2,
   "name": "Neutrify",
-  "version": "1.0",
+  "version": "0.1",
 
-  "description": "",
+  "description": "Neutrify MVP",
   "homepage_url": "https://github.com/behjieshen/neutrify",
   "icons": {
     "48": "images/extension-48.png"
   },
 
-  "permissions": ["activeTab"],
+  "permissions": ["tabs", "cookies", "<all_urls>"],
 
   "browser_action": {
     "default_icon": "images/extension-48.png",
     "default_title": "Neutrify",
-    "default_popup": "index.html"
+    "default_popup": "popup.html"
   },
 
-  "content_scripts": [
-    {
-      "matches" : ["<all_urls>"],
-      "js": ["content_scripts/index.js"]
-    }
-  ]
+  "background": {
+    "scripts": ["static/js/background.js"]
+  },
+
+  "content_scripts": [{
+    "js": [ "static/js/content.js" ],
+    "matches" : ["*://*/*"]
+  }],
+
+  "options_ui": {
+    "page": "options.html"
+  }
 }

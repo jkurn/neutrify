@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import './index.css';
-import Extension from "./containers/Extension";
+import Options from "./containers/Options";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Extension />
+    <Options />
   </React.StrictMode>,
   document.getElementById("root")
 );
