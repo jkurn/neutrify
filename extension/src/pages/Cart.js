@@ -1,113 +1,46 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AltItem from "../components/Cart/AltItem";
+import CartItem from "../components/Cart/CartItem";
 
-const ImageContainer = styled.img`
-  margin-left: 15px;
-`;
-
-const CartItem = styled.div`
-  border-radius: 5px 5px 0px 0px;
-  background: #f4f7fb;
-  border: 2px solid #ececec;
-  border-bottom: 0px;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 295px;
-`;
-
-const ItemName = styled.div`
-  font-size: 11px;
-  margin: 5px 5px 5px 6px;
-  font-weight: 500;
-`;
-
-const ItemDesc = styled.div`
-  font-size: 8px;
-  margin: 6px 5px 5px 1px;
-`;
-
-const PerServing = styled.div`
-  font-size: 9px;
-  margin: 6px 5px 5px 5px;
-  color: gray;
-`;
-
-const CartItemGHG = styled.div`
-  border-radius: 0px 0px 5px 5px;
-  background: #f4f7fb;
-  border: 2px solid #ececec;
-  margin-bottom: 5px;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 295px;
+const CartSection = styled.div`
+  padding: 10px;
+  width: 100%;
 `;
 
 const ItemGHG = styled.div`
   color: #7492b6;
   font-weight: 550;
   font-size: 15px;
-  margin: 4px 5px 5px 10px;
+  margin-left: 10px;
 `;
 
 const OfCO2Expr = styled.div`
   font-weight: 550;
   font-size: 15px;
-  margin: 4px 5px 5px 0px;
+  margin-left: 5px;
 `;
 
 const ProducedExpr = styled.div`
   font-weight: 550;
   font-size: 12px;
-  margin: 7px 5px 5px 1px;
+  margin-left: 5px;
 `;
 
 const TotalContainer = styled.div`
   background: #ececec;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding: 8px;
-  height: 80px;
+  padding: 10px;
+  padding-bottom: 17px;
+  margin: 10px 0;
 `;
 
-const AltContainer = styled.div`
-  border-radius: 5px;
-  background: #f4f7fb;
-  border: 2px solid #86bda6;
-  border-collapse: separate;
-  border-spacing: 15px;
-  margin: 5px 10px 5px 10px;
-  height: 34px;
-`;
-
-const AltItem = styled.div`
-  margin: 5px 5px 5px 10px;
-  font-size: 13px;
-  font-weight: 500;
-`;
-
-const AltItemDesc = styled.div`
-  font-size: 10px;
-  margin: 8px 5px 5px 1px;
-`;
-
-const AddToCartButton = styled.button`
-  background-color: #26bd58;
-  border-radius: 3px;
-  position: absolute;
-  right: 0;
-  color: white;
-  text-align: center;
-  display: inline-block;
-  font-size: 8px;
-  font-weight: 550;
-  margin-top: 5px;
-  margin-right: 19px;
-  width: 90px;
-  height: 20px;
+const ShowBreakdown = styled.a`
+  color: #192642;
 `;
 
 function Cart() {
+  const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [rawCart, setRawCart] = useState([]);
   const [cartWithGHG, setCartWithGHG] = useState([]);
@@ -120,6 +53,7 @@ function Cart() {
       .then(({ response }) => {
         console.log(response);
         setIsLoggedIn(response);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -128,12 +62,12 @@ function Cart() {
   useEffect(() => {
     console.log(isLoggedIn);
     if (isLoggedIn === true) {
+      setLoading(true);
       browser.runtime
         .sendMessage("getCartDetails")
         .then(({ response }) => {
-          console.log(response);
           setRawCart(response);
-          console.log(rawCart);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     }
@@ -142,11 +76,11 @@ function Cart() {
   useEffect(() => {
     console.log("RawCart", rawCart);
     if (rawCart && rawCart.length > 0) {
-      console.log("i am in");
+      setLoading(true);
       let promises = [];
       let finalCart = [];
 
-      rawCart.map((rawCartItem) => {
+      rawCart.forEach((rawCartItem) => {
         let cartItemWithGHGPromise = new Promise(async (resolve, reject) => {
           try {
             let rawCartItemId = await rawCartItem.id.split("_")[1];
@@ -154,7 +88,8 @@ function Cart() {
               await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
             ).data;
 
-            setTotalGHG(totalGHG + finalCartItem.C02 * rawCartItem.quantity);
+            let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
+            setTotalGHG(totalGHG + newTotalGHG);
 
             if (finalCartItem.data !== "") {
               await finalCart.push({ ...rawCartItem, ...finalCartItem });
@@ -172,11 +107,18 @@ function Cart() {
       Promise.all(promises).then(() => {
         console.log("Final Cart", finalCart);
         setCartWithGHG(finalCart);
+        setLoading(false);
       });
     }
   }, [rawCart]);
 
-  if (isLoggedIn === false) {
+  if (loading === true) {
+    return (
+      <div className="flex justify-center">
+        <img src="/images/loading.svg" className="w-8 animate-spin" />
+      </div>
+    );
+  } else if (isLoggedIn === false) {
     return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged in</h1>;
   } else if (!rawCart || (rawCart && rawCart.length === 0)) {
     return (
@@ -202,51 +144,37 @@ function Cart() {
                     ghg={cartItem.C02}
                   />
                 );
-                break;
               default:
-                break;
+                return null;
             }
           })}
         </CartSection>
 
         <TotalContainer>
-          <div className="flex">
-            <h1 className="text-2xs text-gray-500 font-semibold m-1">TOTAL PURCHASE EMISSIONS</h1>
-            <div>
-              <a href="#" className="text-n-black text-3xs text-xs font-medium underline ml-12">
-                SHOW BREAKDOWN
-              </a>
-            </div>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xs text-gray-500 font-semibold">TOTAL PURCHASE EMISSIONS</h1>
+            <ShowBreakdown href="#" className="text-3xs text-xs font-semibold underline ml-12">
+              SHOW BREAKDOWN
+            </ShowBreakdown>
           </div>
 
           <div className="flex align-center mt-4 ml-5">
             <img src="/images/c02.svg" alt="CO2 Logo" />
             <ItemGHG>{totalGHG}kg</ItemGHG>
             <OfCO2Expr>of CO2</OfCO2Expr>
-            <ProducedExpr>produced</ProducedExpr>
+            <ProducedExpr className="self-end">produced</ProducedExpr>
           </div>
         </TotalContainer>
 
-        <h1 className="text-2xs font-semibold ml-2 text-n-green">SUGGESTED ALTERNATIVES</h1>
-        <div className="flex items-center">
-          <img src="/images/c02.svg" alt="CO2" className="-mt-3 ml-2" />
-          <h1 className="text-sm font-medium ml-1 mb-4 text-n-aquablue">
-            124 shoppers have shopped carbon
+        <CartSection>
+          <h1 className="text-2xs font-semibold text-n-green mb-1">SUGGESTED ALTERNATIVES</h1>
+          <h1 className="text-xs font-semibold ml-1 mb-4 text-n-aquablue">
+            <img src="/images/star.svg" alt="Star" className="mb-1 mr-1 inline-flex items-center" />
+            124 shoppers have shopped carbon conscious!
           </h1>
-        </div>
-        <h1 className="text-sm font-medium -mt-4 ml-2 mb-1 text-n-aquablue">conscious!</h1>
-        <AltContainer className="flex">
-          <ImageContainer src="/images/fish.svg" alt="fish" />
-          <AltItem>Salmon</AltItem>
-          <AltItemDesc>(Local)</AltItemDesc>
-          <AddToCartButton>ADD TO CART</AddToCartButton>
-        </AltContainer>
-
-        <AltContainer className="flex">
-          <ImageContainer src="/images/vegetable.svg" alt="vegetable" />
-          <AltItem>Beyond Meat</AltItem>
-          <AddToCartButton>ADD TO CART</AddToCartButton>
-        </AltContainer>
+          <AltItem imageURL="/images/fish.svg" title="Salmon" description="Local" />
+          <AltItem imageURL="/images/vegetable.svg" title="Beyond Meat" />
+        </CartSection>
       </div>
     );
   }

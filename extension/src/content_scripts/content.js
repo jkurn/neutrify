@@ -1,12 +1,17 @@
 function generateExtension(extraClass) {
   let iframe;
 
-  if (typeof document.getElementsByClassName("neutrify")[0] === "undefined") {
-    iframe = document.createElement("iframe");
-    iframe.src = chrome.extension.getURL("popup.html");
-  } else {
-    iframe = document.getElementsByClassName("neutrify")[0];
-  }
+  // if (typeof document.getElementsByClassName("neutrify")[0] === "undefined") {
+  //   iframe = document.createElement("iframe");
+  //   iframe.src = chrome.extension.getURL("popup.html");
+  // } else {
+  //   iframe = document.getElementsByClassName("neutrify")[0];
+  // }
+
+  document.querySelectorAll(".neutrify").forEach((e) => e.remove());
+
+  iframe = document.createElement("iframe");
+  iframe.src = chrome.extension.getURL("popup.html");
 
   iframe.className = `neutrify ${extraClass}`;
 
@@ -28,7 +33,6 @@ function onURLChange() {
         if (oldHref != document.location.href) {
           oldHref = document.location.href;
           main();
-          document.getElementsByClassName("neutrify-cart")[0].style.display = "none";
         }
       });
     });
@@ -57,7 +61,6 @@ function main() {
 
     .neutrify-cart {
         right: 600px;
-        display: none;
     }
 
     .neutrify-checkout {
@@ -65,6 +68,8 @@ function main() {
         display: block;
     }
 `;
+
+  document.querySelectorAll(".neutrify").forEach((e) => e.remove());
 
   if (window.location.host === "www.instacart.com") {
     injectCSS(styles);
@@ -76,7 +81,6 @@ function main() {
     } else if (window.location.href.includes("items")) {
       iframeExtension = generateExtension("neutrify-item-detail");
     } else {
-      iframeExtension = generateExtension("neutrify-cart");
       let elemToObserve = document.getElementsByClassName("store_overlay")[0];
       let prevClassState = elemToObserve.classList.contains("active");
       let observer = new MutationObserver(function (mutations) {
@@ -86,9 +90,10 @@ function main() {
             if (prevClassState !== currentClassState) {
               prevClassState = currentClassState;
               if (currentClassState) {
-                document.getElementsByClassName("neutrify-cart")[0].style.display = "block";
+                iframeExtension = generateExtension("neutrify-cart");
+                document.getElementsByTagName("body")[0].appendChild(iframeExtension);
               } else {
-                document.getElementsByClassName("neutrify-cart")[0].style.display = "none";
+                document.querySelectorAll(".neutrify").forEach((e) => e.remove());
               }
             }
           }
@@ -100,6 +105,17 @@ function main() {
     document.getElementsByTagName("body")[0].appendChild(iframeExtension);
   }
 }
+
+browser.runtime.onMessage.addListener(request => {
+  console.log(request);
+  switch(request) {
+    case "closeExtension":
+      document.querySelectorAll(".neutrify").forEach((e) => e.remove());
+      break;
+    default:
+      break;
+  }
+});
 
 onURLChange();
 main();

@@ -1,4 +1,4 @@
-// console.log("Background script: active");
+import axios from "axios";
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message) {
@@ -39,7 +39,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 size: moduleData.item.size || null,
                 pricing: moduleData.pricing.price || null,
                 type: moduleData.item.tracking_params.aisle_name || null,
-                title: moduleData.item.name || null
+                title: moduleData.item.name || null,
               };
               console.log(cartItem);
               await cartData.push(cartItem);
@@ -52,9 +52,22 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
           await sendResponse({ err });
         });
       break;
+    case "closeExtension":
+      browser.tabs
+        .query({
+          currentWindow: true,
+          active: true,
+        })
+        .then((tabs) => {
+          browser.tabs.sendMessage(tabs[0].id, "closeExtension");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      break;
     default:
       break;
   }
 
-//   return true;
-// });
+  return true;
+});
