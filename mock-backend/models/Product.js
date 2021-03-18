@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
-  gtin_id: String,
+  product_id: String,
   price: Number,
-  instacart_id: String,
   name: String,
+  C02: Number
 });
 
 module.exports = mongoose.model("Product", schema);

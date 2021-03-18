@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 
@@ -112,34 +114,106 @@ const AddToCartButton = styled.button`
 `;
 
 function Cart() {
-  return (
-    <CartContainer className="flex flex-col vertical-center">
-        <h1 className="text-xs font-semibold text-gray-500 m-2">BASED ON YOUR CART TODAY</h1>
-        <CartItem className="flex">
-          <ImageContainer src="/images/beef.svg" alt="Beef Logo"/>
-          <ItemName>Beef</ItemName>
-          <ItemDesc>(New York Strip Cut)</ItemDesc>
-          <PerServing>per 1 kg</PerServing>
-        </CartItem>
-        <CartItemGHG className="flex">
-          <ImageContainer src="/images/c02.svg" alt="CO2 Logo" />
-          <ItemGHG>60kg</ItemGHG>
-          <OfCO2Expr>of CO2</OfCO2Expr>
-          <ProducedExpr>produced</ProducedExpr>
-        </CartItemGHG>
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [rawCart, setRawCart] = useState([]);
+  const [cartWithGHG, setCartWithGHG] = useState([]);
+  const [totalGHG, setTotalGHG] = useState(0);
 
-        <CartItem className="flex">
-          <ImageContainer src="/images/lamb.svg" alt="Beef Logo" />
-          <ItemName>Lamb</ItemName>
-          <ItemDesc>(Natural Choice)</ItemDesc>
-          <PerServing>per 1 kg</PerServing>
-        </CartItem>
-        <CartItemGHG className="flex">
-          <ImageContainer src="/images/c02.svg" alt="CO2 Logo" />
-          <ItemGHG>84kg</ItemGHG>
-          <OfCO2Expr>of CO2 </OfCO2Expr>
-          <ProducedExpr>produced</ProducedExpr>
-        </CartItemGHG>
+  // check Login
+  useEffect(() => {
+    browser.runtime
+      .sendMessage("checkLogin")
+      .then(({ response }) => {
+        console.log(response);
+        setIsLoggedIn(response);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // check Cart
+  useEffect(() => {
+    console.log(isLoggedIn);
+    if (isLoggedIn === true) {
+      browser.runtime
+        .sendMessage("getCartDetails")
+        .then(({ response }) => {
+          console.log(response);
+          setRawCart(response);
+          console.log(rawCart);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    console.log("RawCart", rawCart);
+    if (rawCart && rawCart.length > 0) {
+      console.log("i am in");
+      let promises = [];
+      let finalCart = [];
+
+      rawCart.map((rawCartItem) => {
+        let cartItemWithGHGPromise = new Promise(async (resolve, reject) => {
+          try {
+            let rawCartItemId = await rawCartItem.id.split("_")[1];
+            let finalCartItem = (
+              await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
+            ).data;
+
+            setTotalGHG(totalGHG + finalCartItem.C02 * rawCartItem.quantity);
+
+            if (finalCartItem.data !== "") {
+              await finalCart.push({ ...rawCartItem, ...finalCartItem });
+            }
+          } catch (err) {
+            console.log(err);
+            reject(err);
+          }
+          await resolve("success");
+        });
+
+        promises.push(cartItemWithGHGPromise);
+      });
+
+      Promise.all(promises).then(() => {
+        console.log("Final Cart", finalCart);
+        setCartWithGHG(finalCart);
+      });
+    }
+  }, [rawCart]);
+
+  if (isLoggedIn === false) {
+    return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged in</h1>;
+  } else if (!rawCart || (rawCart && rawCart.length === 0)) {
+    return (
+      <h1 className="w-6/12 text-center mx-auto">
+        Please make sure you have added something into your cart
+      </h1>
+    );
+  } else if (cartWithGHG && rawCart.length > 0) {
+    return (
+      <div className="flex w-full flex-col">
+        <CartSection>
+          <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
+          {cartWithGHG.map((cartItem) => {
+            switch (cartItem.type) {
+              case "Beef":
+                console.log(cartItem);
+                return (
+                  <CartItem
+                    imageURL="/images/beef.svg"
+                    title={cartItem.title}
+                    description="Natural Choice"
+                    serving={cartItem.size}
+                    ghg={cartItem.C02}
+                  />
+                );
+                break;
+              default:
+                break;
+            }
+          })}
+        </CartSection>
 
         <TotalContainer>
           <div className="flex">
@@ -147,9 +221,9 @@ function Cart() {
             <div><a href="#" className="text-n-black text-3xs text-xs font-medium underline ml-12">SHOW BREAKDOWN</a></div>
           </div>
 
-          <div className="flex align-center mt-1">
-            <ImageContainer src="/images/c02.svg" alt="CO2 Logo" />
-            <ItemGHG>144kg</ItemGHG>
+          <div className="flex align-center mt-4 ml-5">
+            <img src="/images/c02.svg" alt="CO2 Logo" />
+            <ItemGHG>{totalGHG}kg</ItemGHG>
             <OfCO2Expr>of CO2</OfCO2Expr>
             <ProducedExpr>produced</ProducedExpr>
           </div>

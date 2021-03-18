@@ -28,11 +28,11 @@ router.get("/products", async (req, res) => {
  */
 router.get("/product/:id", async (req, res) => {
   try {
-    const product = await Product.findOne({ _id: req.params.id });
+    const product = await Product.findOne({ product_id: req.params.id }).lean();
     res.send(product);
-  } catch {
+  } catch(err) {
     res.status(404);
-    res.send({ error: "Product doesn't exist!" });
+    res.send({ error: err });
   }
 });
 
