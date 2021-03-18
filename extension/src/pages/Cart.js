@@ -2,20 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-
-const CartContainer = styled.div`
-  position: absolute;
-  margin-top:80px;;
-`;
-
 const ImageContainer = styled.img`
   margin-left: 15px;
 `;
 
 const CartItem = styled.div`
   border-radius: 5px 5px 0px 0px;
-  background: #F4F7FB;
-  border: 2px solid #ECECEC;
+  background: #f4f7fb;
+  border: 2px solid #ececec;
   border-bottom: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -41,8 +35,8 @@ const PerServing = styled.div`
 
 const CartItemGHG = styled.div`
   border-radius: 0px 0px 5px 5px;
-  background: #F4F7FB;
-  border: 2px solid #ECECEC;
+  background: #f4f7fb;
+  border: 2px solid #ececec;
   margin-bottom: 5px;
   margin-left: 10px;
   margin-right: 10px;
@@ -50,7 +44,7 @@ const CartItemGHG = styled.div`
 `;
 
 const ItemGHG = styled.div`
-  color: #7492B6;
+  color: #7492b6;
   font-weight: 550;
   font-size: 15px;
   margin: 4px 5px 5px 10px;
@@ -69,7 +63,7 @@ const ProducedExpr = styled.div`
 `;
 
 const TotalContainer = styled.div`
-  background: #ECECEC;
+  background: #ececec;
   margin-top: 15px;
   margin-bottom: 15px;
   padding: 8px;
@@ -78,8 +72,8 @@ const TotalContainer = styled.div`
 
 const AltContainer = styled.div`
   border-radius: 5px;
-  background: #F4F7FB;
-  border: 2px solid #86BDA6;
+  background: #f4f7fb;
+  border: 2px solid #86bda6;
   border-collapse: separate;
   border-spacing: 15px;
   margin: 5px 10px 5px 10px;
@@ -98,7 +92,7 @@ const AltItemDesc = styled.div`
 `;
 
 const AddToCartButton = styled.button`
-  background-color: #26BD58;
+  background-color: #26bd58;
   border-radius: 3px;
   position: absolute;
   right: 0;
@@ -218,7 +212,11 @@ function Cart() {
         <TotalContainer>
           <div className="flex">
             <h1 className="text-2xs text-gray-500 font-semibold m-1">TOTAL PURCHASE EMISSIONS</h1>
-            <div><a href="#" className="text-n-black text-3xs text-xs font-medium underline ml-12">SHOW BREAKDOWN</a></div>
+            <div>
+              <a href="#" className="text-n-black text-3xs text-xs font-medium underline ml-12">
+                SHOW BREAKDOWN
+              </a>
+            </div>
           </div>
 
           <div className="flex align-center mt-4 ml-5">
@@ -230,9 +228,11 @@ function Cart() {
         </TotalContainer>
 
         <h1 className="text-2xs font-semibold ml-2 text-n-green">SUGGESTED ALTERNATIVES</h1>
-        <div className="flex">
-          <img src="/images/c02.svg" alt="CO2" className="-mt-3 ml-2"/>
-          <h1 className="text-sm font-medium ml-1 mb-4 text-n-aquablue">124 shoppers have shopped carbon</h1>
+        <div className="flex items-center">
+          <img src="/images/c02.svg" alt="CO2" className="-mt-3 ml-2" />
+          <h1 className="text-sm font-medium ml-1 mb-4 text-n-aquablue">
+            124 shoppers have shopped carbon
+          </h1>
         </div>
         <h1 className="text-sm font-medium -mt-4 ml-2 mb-1 text-n-aquablue">conscious!</h1>
         <AltContainer className="flex">
@@ -243,14 +243,13 @@ function Cart() {
         </AltContainer>
 
         <AltContainer className="flex">
-          <ImageContainer src="/images/vegetable.svg" alt="vegetable"/>
+          <ImageContainer src="/images/vegetable.svg" alt="vegetable" />
           <AltItem>Beyond Meat</AltItem>
           <AddToCartButton>ADD TO CART</AddToCartButton>
         </AltContainer>
-
-    </CartContainer>
-
-  );
+      </div>
+    );
+  }
 }
 
 export default Cart;
