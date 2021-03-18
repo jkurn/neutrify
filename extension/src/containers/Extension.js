@@ -18,7 +18,6 @@ const ExtensionContainer = styled.div`
 
 function Extension() {
   const [currentPage, setCurrentPage] = useState("Cart");
-  const [showExtension, setShowExtension] = useState(true);
 
   function closeExtension() {
     window.close();
@@ -27,11 +26,7 @@ function Extension() {
 
   return (
     <ExtensionContainer
-      className={`flex-col justify-between relative h-full flex `}
-
-      // ${
-      //   showExtension === true ? "flex" : "hidden"
-      // }
+      className="flex-col justify-between relative h-full flex"
     >
       <Header closeExtension={closeExtension} />
       {currentPage === "Home" ? <Home /> : null}

@@ -2,6 +2,7 @@ import axios from "axios";
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message) {
+    // Check a cookie called "_instacart_logged_in" to determine if user is logged in
     case "checkLogin":
       browser.tabs
         .query({
@@ -20,19 +21,22 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         });
       break;
+
+    // Get items in cart using Instacart API endpoint (assuming they are already logged in)
     case "getCartDetails":
-      console.log("proceeding to get cart details");
       axios
         .get("https://www.instacart.com/v3/containers/carts/1")
         .then(async (response) => {
+          // TODO: add error handler
           let { data } = response;
-
           let { modules } = data.container;
           let cartData = [];
-          console.log(modules);
+
           await modules.map(async (module) => {
+            // Push the item to cartData if it is an item
             if (module.id.includes("cart_item_")) {
               let moduleData = module.data;
+
               let cartItem = {
                 id: moduleData.item.id || null,
                 quantity: moduleData.qty || null,
@@ -41,17 +45,19 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 type: moduleData.item.tracking_params.aisle_name || null,
                 title: moduleData.item.name || null,
               };
-              console.log(cartItem);
+              // console.log(cartItem);
+
               await cartData.push(cartItem);
             }
           });
-          console.log(cartData);
+          // console.log(cartData);
           await sendResponse({ response: cartData });
         })
         .catch(async (err) => {
           await sendResponse({ err });
         });
       break;
+    // Send message to content script to close all extensions
     case "closeExtension":
       browser.tabs
         .query({

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AltItem from "../components/Cart/AltItem";
 import CartItem from "../components/Cart/CartItem";
+import { Transition } from "@headlessui/react";
 
 const CartSection = styled.div`
   padding: 10px;
@@ -46,8 +47,9 @@ function Cart() {
   const [cartWithGHG, setCartWithGHG] = useState([]);
   const [totalGHG, setTotalGHG] = useState(0);
 
-  // check Login
+  // Check if user is logged in
   useEffect(() => {
+    // Send message to background script to check cookies
     browser.runtime
       .sendMessage("checkLogin")
       .then(({ response }) => {
@@ -58,10 +60,10 @@ function Cart() {
       .catch((err) => console.log(err));
   }, []);
 
-  // check Cart
+  // Get cart details of the user if they are logged in
   useEffect(() => {
-    console.log(isLoggedIn);
     if (isLoggedIn === true) {
+      // Send message to background script to get cart details
       setLoading(true);
       browser.runtime
         .sendMessage("getCartDetails")
@@ -73,6 +75,7 @@ function Cart() {
     }
   }, [isLoggedIn]);
 
+  // Match each cart item with db to get GHG
   useEffect(() => {
     console.log("RawCart", rawCart);
     if (rawCart && rawCart.length > 0) {
@@ -83,14 +86,19 @@ function Cart() {
       rawCart.forEach((rawCartItem) => {
         let cartItemWithGHGPromise = new Promise(async (resolve, reject) => {
           try {
+            // Get id after "_" (Eg. "item_12345" => "12345")
             let rawCartItemId = await rawCartItem.id.split("_")[1];
+
+            // Get data from db using current id
             let finalCartItem = (
               await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
             ).data;
 
+            // Multiply ghg according to quantity and set it in state
             let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
             setTotalGHG(totalGHG + newTotalGHG);
 
+            // Push item to finalCart array
             if (finalCartItem.data !== "") {
               await finalCart.push({ ...rawCartItem, ...finalCartItem });
             }
@@ -98,12 +106,14 @@ function Cart() {
             console.log(err);
             reject(err);
           }
+          // Resolve promise
           await resolve("success");
         });
 
         promises.push(cartItemWithGHGPromise);
       });
 
+      // Set loading = true once all promises are resolved
       Promise.all(promises).then(() => {
         console.log("Final Cart", finalCart);
         setCartWithGHG(finalCart);
@@ -112,23 +122,46 @@ function Cart() {
     }
   }, [rawCart]);
 
+  // Four possible scenarios
+  // 1. Loading
+  // 2. User is not logged in
+  // 3. User has nothing in the cart
+  // 4. User is logged in & has items in the cart
+
+  // 1. Loading
   if (loading === true) {
     return (
       <div className="flex justify-center">
         <img src="/images/loading.svg" className="w-8 animate-spin" />
       </div>
     );
-  } else if (isLoggedIn === false) {
+  } 
+  // 2. User is not logged in
+  else if (isLoggedIn === false) {
     return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged in</h1>;
-  } else if (!rawCart || (rawCart && rawCart.length === 0)) {
+  } 
+  // 3. User has nothing in the cart
+  else if (!rawCart || (rawCart && rawCart.length === 0)) {
     return (
       <h1 className="w-6/12 text-center mx-auto">
         Please make sure you have added something into your cart
       </h1>
     );
-  } else if (cartWithGHG && rawCart.length > 0) {
+  } 
+  // 4. User is logged in & has items in the cart
+  else if (cartWithGHG && rawCart.length > 0) {
     return (
-      <div className="flex w-full flex-col">
+      <Transition
+        show={true}
+        enter="transition duration-300 ease-out"
+        enterFrom="opacity-0 transform -translate-x-4"
+        enterTo="opacity-100 transform translate-x-0"
+        leave="transition duration-300 ease-out"
+        leaveFrom="opacity-100 transform translate-x-0"
+        leaveTo="opacity-0 transform -translate-x-4"
+        className="flex w-full flex-col"
+        as="div"
+      >
         <CartSection>
           <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
           {cartWithGHG.map((cartItem) => {
@@ -175,7 +208,7 @@ function Cart() {
           <AltItem imageURL="/images/fish.svg" title="Salmon" description="Local" />
           <AltItem imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
-      </div>
+      </Transition>
     );
   }
 }
