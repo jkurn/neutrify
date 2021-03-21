@@ -94,12 +94,13 @@ function Cart() {
               await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
             ).data;
 
-            // Multiply ghg according to quantity and set it in state
-            let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
-            setTotalGHG(totalGHG + newTotalGHG);
+            // Update only if the product exists in the backend
+            if(finalCartItem !== "") {
+              // Multiply ghg according to quantity and set it in state
+              let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
+              await setTotalGHG(totalGHG => totalGHG + newTotalGHG);
 
-            // Push item to finalCart array
-            if (finalCartItem.data !== "") {
+              // Push item to finalCart array
               await finalCart.push({ ...rawCartItem, ...finalCartItem });
             }
           } catch (err) {
@@ -172,8 +173,8 @@ function Cart() {
                   <CartItem
                     imageURL="/images/beef.svg"
                     title={cartItem.title}
-                    description="Natural Choice"
-                    serving={cartItem.size}
+                    // description="Natural Choice"
+                    serving="1 kg"
                     ghg={cartItem.C02}
                   />
                 );
