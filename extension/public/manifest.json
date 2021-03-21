@@ -9,7 +9,7 @@
     "48": "images/extension-48.png"
   },
 
-  "permissions": ["tabs", "cookies", "<all_urls>"],
+  "permissions": ["tabs", "cookies", "webRequest", "<all_urls>"],
 
   "browser_action": {
     "default_icon": "images/extension-48.png",

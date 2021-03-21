@@ -20,21 +20,27 @@ const CloseIcon = styled.img`
   right: 10px;
 `;
 
-
-function Header() {
+function Header({ closeExtension }) {
   return (
     <HeaderContainer className="flex items-center">
       <img src="/images/logo.svg" alt="Neutrify Logo" />
       <div className="flex flex-col justify-center">
         <h1 className="text-2xl font-semibold">Neutrify</h1>
-        <a href="#" className="text-n-turqoise text-xs font-semibold underline">
+        <a
+          href="https://mailchi.mp/c11c1b6d22f8/neutrify-launch"
+          className="text-n-turqoise text-xs font-semibold underline"
+        >
           Learn more
         </a>
       </div>
       <ProgressLiquid className="ml-3 font-semibold text-xs flex items-center justify-center">
         0<span className="text-3xs">%</span>
       </ProgressLiquid>
-      <CloseIcon src="images/close.svg" />
+      <CloseIcon
+        className="cursor-pointer"
+        onClick={() => closeExtension()}
+        src="images/close.svg"
+      />
     </HeaderContainer>
   );
 }

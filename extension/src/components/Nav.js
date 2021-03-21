@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const NavContainer = styled.div`
   background: #e4edf1;
-  padding: 14px 43px;
+  padding: 12px 43px;
 `;
 
 const NavIcon = styled.svg`
@@ -31,7 +31,6 @@ function Nav({ setCurrentPage, currentPage }) {
         width="19"
         height="17"
         viewBox="0 0 19 17"
-        fill="none"
         xmlns="http://www.w3.org/2000/svg"
         fill={currentPage === "Home" ? "#0085FF" : "#8E99A6"}
       >
