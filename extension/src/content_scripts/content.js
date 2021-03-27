@@ -122,9 +122,8 @@ function main() {
 
 // Message listener
 browser.runtime.onMessage.addListener(request => {
-  console.log(request);
-  switch(request) {
-    case "closeExtension":
+  switch(request.destination) {
+    case "content_closeExtension":
       deleteAllExtensions();
       break;
     default:

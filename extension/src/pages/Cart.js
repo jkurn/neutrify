@@ -80,6 +80,9 @@ function Cart() {
     console.log("RawCart", rawCart);
     if (rawCart && rawCart.length > 0) {
       setLoading(true);
+      setTotalGHG(0);
+      setCartWithGHG([]);
+
       let promises = [];
       let finalCart = [];
 
@@ -95,10 +98,11 @@ function Cart() {
             ).data;
 
             // Update only if the product exists in the backend
-            if(finalCartItem !== "") {
+            // TODO: Remove "Beef" type checking in the future (this is hardcoded for MVP purposes)
+            if (finalCartItem !== "" && rawCartItem.type === "Beef") {
               // Multiply ghg according to quantity and set it in state
               let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
-              await setTotalGHG(totalGHG => totalGHG + newTotalGHG);
+              await setTotalGHG((totalGHG) => totalGHG + newTotalGHG);
 
               // Push item to finalCart array
               await finalCart.push({ ...rawCartItem, ...finalCartItem });
@@ -123,6 +127,19 @@ function Cart() {
     }
   }, [rawCart]);
 
+  useEffect(() => {
+    browser.runtime.onMessage.addListener((request) => {
+      switch (request.destination) {
+        case "components_updateCart":
+          setLoading(true);
+          setRawCart(request.response);
+          break;
+        default:
+          break;
+      }
+    });
+  }, []);
+
   // Four possible scenarios
   // 1. Loading
   // 2. User is not logged in
@@ -136,11 +153,11 @@ function Cart() {
         <img src="/images/loading.svg" className="w-8 animate-spin" />
       </div>
     );
-  } 
+  }
   // 2. User is not logged in
   else if (isLoggedIn === false) {
     return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged in</h1>;
-  } 
+  }
   // 3. User has nothing in the cart
   else if (!rawCart || (rawCart && rawCart.length === 0)) {
     return (
@@ -148,9 +165,9 @@ function Cart() {
         Please make sure you have added something into your cart
       </h1>
     );
-  } 
+  }
   // 4. User is logged in & has items in the cart
-  else if (cartWithGHG && rawCart.length > 0) {
+  else if (cartWithGHG && cartWithGHG.length > 0) {
     return (
       <Transition
         show={true}
@@ -165,23 +182,15 @@ function Cart() {
       >
         <CartSection>
           <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
-          {cartWithGHG.map((cartItem) => {
-            switch (cartItem.type) {
-              case "Beef":
-                console.log(cartItem);
-                return (
-                  <CartItem
-                    imageURL="/images/beef.svg"
-                    title={cartItem.title}
-                    // description="Natural Choice"
-                    serving="1 kg"
-                    ghg={cartItem.C02}
-                  />
-                );
-              default:
-                return null;
-            }
-          })}
+          {cartWithGHG.map((cartItem) => (
+            <CartItem
+              imageURL="/images/beef.svg"
+              title={cartItem.title}
+              // description="Natural Choice"
+              serving="1 kg"
+              ghg={cartItem.C02}
+            />
+          ))}
         </CartSection>
 
         <TotalContainer>
@@ -210,6 +219,10 @@ function Cart() {
           <AltItem imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
       </Transition>
+    );
+  } else {
+    return (
+      <h1 className="w-6/12 text-center mx-auto">No items which emits GHG have been detected</h1>
     );
   }
 }
