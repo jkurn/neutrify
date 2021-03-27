@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import './global.css';
-import Options from "./containers/Options";
+import Extension from "./containers/Extension";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Options />
+    <Extension mode="product" />
   </React.StrictMode>,
   document.getElementById("root")
 );

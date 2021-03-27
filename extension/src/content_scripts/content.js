@@ -4,7 +4,7 @@ function deleteAllExtensions() {
 }
 
 // Generate extensions using iframe, with additional optional class
-function generateExtension(extraClass) {
+function generateExtension(extraClass, page = "popup.html") {
   let iframe;
 
   // // Reuse any existing extension, if applicable
@@ -18,7 +18,7 @@ function generateExtension(extraClass) {
   deleteAllExtensions();
 
   iframe = document.createElement("iframe");
-  iframe.src = chrome.extension.getURL("popup.html");
+  iframe.src = chrome.extension.getURL(page);
 
   iframe.className = `neutrify ${extraClass}`;
 
@@ -85,13 +85,19 @@ function main() {
     injectCSS(styles);
 
     let iframeExtension;
+    let currentBrowserURL = window.location.href;
 
-    if (window.location.href.includes("checkout")) {
+    if (currentBrowserURL.includes("checkout")) {
       iframeExtension = generateExtension("neutrify-checkout");
-    } else if (window.location.href.includes("items")) {
-      iframeExtension = generateExtension("neutrify-item-detail");
-    } else {
+    } else if (currentBrowserURL.includes("items")) {
+      iframeExtension = generateExtension("neutrify-item-detail", "product.html");
 
+      let productId = currentBrowserURL.split("item_")[1];
+
+      browser.runtime
+        .sendMessage({ action: "background_getProductDetails", data: { productId } })
+        
+    } else {
       // Mutations Observer to check if the overlay is active (To populate extension when they view cart)
       let elemToObserve = document.getElementsByClassName("store_overlay")[0];
       let prevClassState = elemToObserve.classList.contains("active");
@@ -121,9 +127,11 @@ function main() {
 }
 
 // Message listener
-browser.runtime.onMessage.addListener(request => {
-  switch(request.destination) {
-    case "content_closeExtension":
+browser.runtime.onMessage.addListener((request) => {
+  let action = request.action.split('content_')[1];
+
+  switch (action) {
+    case "closeExtension":
       deleteAllExtensions();
       break;
     default:

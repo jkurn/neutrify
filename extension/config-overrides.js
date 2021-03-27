@@ -21,6 +21,7 @@ function customOverride(config, env) {
     options: paths.appSrc + "/options.js",
     background: paths.appSrc + "/background_scripts/background.js",
     content: paths.appSrc + "/content_scripts/content.js",
+    product: paths.appSrc + "/product.js",
   };
   // Change output filename template to get rid of hash there
   config.output.filename = "static/js/[name].js";
@@ -54,6 +55,7 @@ function customOverride(config, env) {
     filename: "popup.html",
     minify: isEnvProduction && minifyOpts,
   });
+
   // Replace origin HtmlWebpackPlugin instance in config.plugins with the above one
   config.plugins = replacePlugin(
     config.plugins,
@@ -72,6 +74,16 @@ function customOverride(config, env) {
   // Add the above HtmlWebpackPlugin instance into config.plugins
   // Note: you may remove/comment the next line if you don't need an options page
   config.plugins.push(optionsHtmlPlugin);
+
+  const productHtmlPlugin = new HtmlWebpackPlugin({
+    inject: true,
+    chunks: ["product"],
+    template: paths.appPublic + "/product.html",
+    filename: "product.html",
+    minify: isEnvProduction && minifyOpts,
+  });
+
+  config.plugins.push(productHtmlPlugin);
 
   // Custom ManifestPlugin instance to cast asset-manifest.json back to old plain format
   const manifestPlugin = new ManifestPlugin({
