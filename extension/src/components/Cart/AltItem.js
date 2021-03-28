@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const AltItemContainer = styled.div`
@@ -29,7 +31,8 @@ const AddToCartButton = styled.button`
   padding: 6px 15px;
 `;
 
-function AltItem({ imageURL, title, description }) {
+function AltItem({ imageURL, title, description, productId }) {
+
   return (
     <AltItemContainer className="flex font-semibold justify-between items-center">
       <div className="flex items-center">
@@ -37,7 +40,16 @@ function AltItem({ imageURL, title, description }) {
         <AltItemTitle>{title}</AltItemTitle>
         {typeof description !== "undefined" ? <AltItemDesc>({description})</AltItemDesc> : null}
       </div>
-      <AddToCartButton>ADD TO CART</AddToCartButton>
+      <AddToCartButton
+        onClick={() => {
+          browser.runtime.sendMessage({
+            action: "background_addProductToCart",
+            data: { productId },
+          });
+        }}
+      >
+        ADD TO CART
+      </AddToCartButton>
     </AltItemContainer>
   );
 }
