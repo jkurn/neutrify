@@ -94,9 +94,7 @@ function main() {
 
       let productId = currentBrowserURL.split("item_")[1];
 
-      browser.runtime
-        .sendMessage({ action: "background_getProductDetails", data: { productId } })
-        
+      browser.runtime.sendMessage({ action: "background_getProductDetails", data: { productId } });
     } else {
       // Mutations Observer to check if the overlay is active (To populate extension when they view cart)
       let elemToObserve = document.getElementsByClassName("store_overlay")[0];
@@ -126,17 +124,31 @@ function main() {
   }
 }
 
+function getLocalStorageData(data, sendResponse) {
+  let { key } = data;
+  console.log(JSON.parse(localStorage.getItem(key)));
+  sendResponse({ response: JSON.parse(localStorage.getItem(key)) });
+}
+
 // Message listener
-browser.runtime.onMessage.addListener((request) => {
-  let action = request.action.split('content_')[1];
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  let action = request.action.split("content_")[1];
+  let { data } = request || null;
 
   switch (action) {
     case "closeExtension":
       deleteAllExtensions();
       break;
+
+    case "getLocalStorageData":
+      getLocalStorageData(data, sendResponse);
+      break;
+
     default:
       break;
   }
+
+  return true;
 });
 
 onURLChange();

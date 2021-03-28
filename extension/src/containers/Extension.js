@@ -12,6 +12,7 @@ import Product from "../pages/Product";
   // min-height: 558px;
 const ExtensionContainer = styled.div`
   width: 100%;
+  min-width: 315px;
   height: 558px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
   border-radius: 5px;

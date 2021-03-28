@@ -151,7 +151,7 @@ function Cart() {
   // 1. Loading
   if (loading === true) {
     return (
-      <div className="flex justify-center flex-1">
+      <div className="flex justify-center flex-1 overflow-hidden">
         <img src="/images/loading.svg" className="w-8 animate-spin" />
       </div>
     );
@@ -217,8 +217,12 @@ function Cart() {
             <img src="/images/star.svg" alt="Star" className="mb-1 mr-1 inline-flex items-center" />
             124 shoppers have shopped carbon conscious!
           </h1>
-          <AltItem imageURL="/images/fish.svg" title="Salmon" description="Local" />
-          <AltItem imageURL="/images/vegetable.svg" title="Beyond Meat" />
+          {/* Hard coded productId to test add to cart feature
+            1. Salmon
+            2. Cabbage
+          */}
+          <AltItem productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
+          <AltItem productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
       </Transition>
     );
