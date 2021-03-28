@@ -40,17 +40,17 @@ export default function generateExtensionController() {
       browser.runtime.sendMessage({ action: "background_getProductDetails", data: { productId } });
     } else {
       // Mutations Observer to check if the overlay is active (To populate extension when they view cart)
-      let elemToObserve = document.getElementsByClassName("store_overlay")[0];
-      let prevClassState = elemToObserve.classList.contains("active");
+      let cartContainer = document.getElementsByClassName("cart-container")[0];
+      let prevStyleState = cartContainer.style.transform;
       let observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
-          if (mutation.attributeName == "class") {
-            let currentClassState = mutation.target.classList.contains("active");
-            if (prevClassState !== currentClassState) {
-              prevClassState = currentClassState;
+          if (mutation.attributeName == "style") {
+            let currentStyleState = mutation.target.style.transform;
+            if (prevStyleState !== currentStyleState) {
+              prevStyleState = currentStyleState;
 
               // Delete all extensions if cart is no longer active, else instantiate extension beside cart
-              if (currentClassState) {
+              if (currentStyleState === "translateX(0px)") {
                 iframeExtension = generateExtension("neutrify-cart");
                 document.getElementsByTagName("body")[0].appendChild(iframeExtension);
               } else {
@@ -60,7 +60,7 @@ export default function generateExtensionController() {
           }
         });
       });
-      observer.observe(elemToObserve, { attributes: true });
+      observer.observe(cartContainer, { attributes: true });
     }
 
     document.getElementsByTagName("body")[0].appendChild(iframeExtension);
