@@ -6,7 +6,7 @@ Neutrify is a firefox extension that helps reduce carbon footprint.
 
 Duration of project: 8 March 2021 - Present
 
-Tech Stack: React.js, 
+Built with React.js & TailwindCSS
 
 ## Install
 
@@ -16,23 +16,15 @@ Tech Stack: React.js,
 yarn install
 ```
 
-2. Make sure that your environment variables are installed by placing them into a file called ".env". This is to ensure that the mock db runs.
+2. Make sure that you have the a file called `.env` in the `extension` folder, to keep all important environment variables.
 
 3. Once all is done, run
 
 ```bash
-yarn dev
+yarn build
 ```
 
-## API
-
-- Mock DB ('/api/mock/')
-    - '/products'
-        - GET: View list of mock products
-    - '/product/:id'
-        - GET: Get single product based on id
-    - '/product'
-        - POST: Add mock product to mock db
+4. Head over to `about:debugging#/runtime/this-firefox` in Mozilla Firefox and click `Load Temporary Add-on...` to load the `manifest.json` in your `build` folder.
 
 ## Contributors:
 
