@@ -4,6 +4,7 @@ import getCartDetails from './utils/getCartDetails';
 import getProductDetails from './utils/getProductDetails';
 import closeExtension from './utils/closeExtension';
 import addProductToCart from './utils/addProductToCart';
+import getProductsWithCarbon from './utils/getProductsWithCarbon';
 
 browser.webRequest.onBeforeRequest.addListener(networkRequestHandler, { urls: ["<all_urls>"] });
 
@@ -36,6 +37,11 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Add product to cart based on id
     case "addProductToCart":
       addProductToCart(messageData, sendResponse);
+      break;
+
+    // Get products with carbon footprint rating
+    case "getProductsWithCarbon":
+      getProductsWithCarbon(messageData, sendResponse);
       break;
 
     default:

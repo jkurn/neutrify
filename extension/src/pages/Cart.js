@@ -84,59 +84,22 @@ function Cart() {
       setTotalGHG(0);
       setCartWithGHG([]);
 
-      let promises = [];
-      let finalCart = [];
-
-      rawCart.forEach((rawCartItem) => {
-        let cartItemWithGHGPromise = new Promise(async (resolve, reject) => {
-          try {
-            // Get id after "_" (Eg. "item_12345" => "12345")
-            let rawCartItemId = await rawCartItem.id.split("_")[1];
-
-            // Get data from db using current id
-            let { data } = (
-              await axios.get(`${API_ENDPOINT}/products/get/${rawCartItemId}`, {
-                headers: {
-                  apiskey: process.env.REACT_APP_API_SECRET_KEY
-                }
-              })
-            ).data;
-
-            let finalCartItem = data.product;
-
-            // Update only if the product exists in the backend
-            // TODO: Remove "Beef" type checking in the future (this is hardcoded for MVP purposes)
-            if (finalCartItem !== "" && rawCartItem.type === "Beef") {
-              // Multiply ghg according to quantity and set it in state
-              let newTotalGHG = finalCartItem.carbon * rawCartItem.quantity;
-              await setTotalGHG((totalGHG) => totalGHG + newTotalGHG);
-
-              // Push item to finalCart array
-              await finalCart.push({ ...rawCartItem, ...finalCartItem });
-            }
-          } catch (err) {
-            console.log(err);
-            reject(err);
-          }
-          // Resolve promise
-          await resolve("success");
-        });
-
-        promises.push(cartItemWithGHGPromise);
-      });
-
-      // Set loading = true once all promises are resolved
-      Promise.all(promises).then(() => {
-        console.log("Final Cart", finalCart);
-        setCartWithGHG(finalCart);
-        setLoading(false);
-      });
+      browser.runtime
+        .sendMessage({ action: "background_getProductsWithCarbon", data: { rawCart } })
+        .then(({response}) => {
+          console.log(response);
+          setCartWithGHG(response.finalCart);
+          console.log(cartWithGHG);
+          setTotalGHG(response.totalGHG);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
     }
   }, [rawCart]);
 
   useEffect(() => {
     browser.runtime.onMessage.addListener((request) => {
-      let action = request.action.split('components_')[1];
+      let action = request.action.split("components_")[1];
 
       switch (action) {
         case "updateCart":
@@ -192,7 +155,6 @@ function Cart() {
         <CartSection>
           <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
           {cartWithGHG.map((cartItem) => (
-            
             <CartItem
               imageURL="/images/beef.svg"
               title={cartItem.name}
@@ -229,14 +191,27 @@ function Cart() {
             1. Salmon
             2. Cabbage
           */}
-          <AltItem setLoading={setLoading} productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
-          <AltItem setLoading={setLoading} productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
+          <AltItem
+            setLoading={setLoading}
+            productId="1751568389"
+            imageURL="/images/fish.svg"
+            title="Salmon"
+            description="Local"
+          />
+          <AltItem
+            setLoading={setLoading}
+            productId="1751571917"
+            imageURL="/images/vegetable.svg"
+            title="Beyond Meat"
+          />
         </CartSection>
       </Transition>
     );
   } else {
     return (
-      <h1 className="w-6/12 text-center mx-auto flex-1">No items which emits GHG have been detected</h1>
+      <h1 className="w-6/12 text-center mx-auto flex-1">
+        No items which emits GHG have been detected
+      </h1>
     );
   }
 }
