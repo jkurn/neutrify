@@ -229,8 +229,8 @@ function Cart() {
             1. Salmon
             2. Cabbage
           */}
-          <AltItem productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
-          <AltItem productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
+          <AltItem setLoading={setLoading} productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
+          <AltItem setLoading={setLoading} productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
       </Transition>
     );

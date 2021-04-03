@@ -173,8 +173,8 @@ function Product() {
             <img src="/images/star.svg" alt="Star" className="mb-1 mr-1 inline-flex items-center" />
             124 shoppers have shopped carbon conscious!
           </h1>
-          <AltItem imageURL="/images/fish.svg" title="Salmon" description="Local" />
-          <AltItem imageURL="/images/vegetable.svg" title="Beyond Meat" />
+          <AltItem setLoading={setLoading} productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
+          <AltItem setLoading={setLoading} productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
       </Transition>
     );
