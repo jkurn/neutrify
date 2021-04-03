@@ -31,8 +31,7 @@ const AddToCartButton = styled.button`
   padding: 6px 15px;
 `;
 
-function AltItem({ imageURL, title, description, productId }) {
-
+function AltItem({ imageURL, title, description, productId, setLoading }) {
   return (
     <AltItemContainer className="flex font-semibold justify-between items-center">
       <div className="flex items-center">
@@ -41,11 +40,19 @@ function AltItem({ imageURL, title, description, productId }) {
         {typeof description !== "undefined" ? <AltItemDesc>({description})</AltItemDesc> : null}
       </div>
       <AddToCartButton
+        className="hover:opacity-80"
         onClick={() => {
-          browser.runtime.sendMessage({
-            action: "background_addProductToCart",
-            data: { productId },
-          });
+          setLoading(true);
+          browser.runtime
+            .sendMessage({
+              action: "background_addProductToCart",
+              data: { productId },
+            })
+            .then(() => {
+              setTimeout(() => {
+                setLoading(false);
+              }, 3000);
+            });
         }}
       >
         ADD TO CART

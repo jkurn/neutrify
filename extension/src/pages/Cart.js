@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AltItem from "../components/Cart/AltItem";
 import CartItem from "../components/Cart/CartItem";
 import { Transition } from "@headlessui/react";
+import { API_ENDPOINT } from "../config.js/global";
 
 const CartSection = styled.div`
   padding: 10px;
@@ -93,15 +94,21 @@ function Cart() {
             let rawCartItemId = await rawCartItem.id.split("_")[1];
 
             // Get data from db using current id
-            let finalCartItem = (
-              await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
+            let { data } = (
+              await axios.get(`${API_ENDPOINT}/products/get/${rawCartItemId}`, {
+                headers: {
+                  apiskey: process.env.REACT_APP_API_SECRET_KEY
+                }
+              })
             ).data;
+
+            let finalCartItem = data.product;
 
             // Update only if the product exists in the backend
             // TODO: Remove "Beef" type checking in the future (this is hardcoded for MVP purposes)
             if (finalCartItem !== "" && rawCartItem.type === "Beef") {
               // Multiply ghg according to quantity and set it in state
-              let newTotalGHG = finalCartItem.C02 * rawCartItem.quantity;
+              let newTotalGHG = finalCartItem.carbon * rawCartItem.quantity;
               await setTotalGHG((totalGHG) => totalGHG + newTotalGHG);
 
               // Push item to finalCart array
@@ -185,12 +192,13 @@ function Cart() {
         <CartSection>
           <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
           {cartWithGHG.map((cartItem) => (
+            
             <CartItem
               imageURL="/images/beef.svg"
-              title={cartItem.title}
+              title={cartItem.name}
               // description="Natural Choice"
               serving="1 kg"
-              ghg={cartItem.C02}
+              ghg={cartItem.carbon}
             />
           ))}
         </CartSection>
@@ -221,8 +229,8 @@ function Cart() {
             1. Salmon
             2. Cabbage
           */}
-          <AltItem productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
-          <AltItem productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
+          <AltItem setLoading={setLoading} productId="1751568389" imageURL="/images/fish.svg" title="Salmon" description="Local" />
+          <AltItem setLoading={setLoading} productId="1751571917" imageURL="/images/vegetable.svg" title="Beyond Meat" />
         </CartSection>
       </Transition>
     );

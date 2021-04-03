@@ -1,9 +1,9 @@
 /**
  * Route URL: /api/mock/[routes]
  *
- * [GET] - View list of mock products
+ * [GET] - View list of mock products (not used)
  * [GET] - View product based on id
- * [POST] - Submit new mock product
+ * [POST] - Submit new mock product (not used)
  *
  */
 
