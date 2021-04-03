@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AltItem from "../components/Cart/AltItem";
 import CartItem from "../components/Cart/CartItem";
 import { Transition } from "@headlessui/react";
+import { API_ENDPOINT } from "../config.js/global";
 
 const CartSection = styled.div`
   padding: 10px;
@@ -77,9 +78,15 @@ function Product() {
             let rawCartItemId = await rawCartItem.id.split("_")[1];
 
             // Get data from db using current id
-            let finalCartItem = (
-              await axios.get(`http://localhost:5000/api/mock/product/${rawCartItemId}`)
+            let { data } = (
+              await axios.get(`${API_ENDPOINT}/products/get/${rawCartItemId}`, {
+                headers: {
+                  apiskey: process.env.REACT_APP_API_SECRET_KEY
+                }
+              })
             ).data;
+
+            let finalCartItem = data.product;
 
             // Update only if the product exists in the backend
             // TODO: Remove "Beef" type checking in the future (this is hardcoded for MVP purposes)
@@ -152,10 +159,10 @@ function Product() {
           {cartWithGHG.map((cartItem) => (
             <CartItem
               imageURL="/images/beef.svg"
-              title={cartItem.title}
+              title={cartItem.name}
               // description="Natural Choice"
               serving="1 kg"
-              ghg={cartItem.C02}
+              ghg={cartItem.carbon}
             />
           ))}
         </CartSection>
