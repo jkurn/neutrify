@@ -140,7 +140,7 @@ function Cart() {
   else if (!rawCart || (rawCart && rawCart.length === 0)) {
     return (
       <h1 className="w-6/12 text-center mx-auto">
-//        Please make sure you have added something into your cart
+        Please make sure you have added something into your cart
       </h1>
     );
   }

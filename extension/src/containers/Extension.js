@@ -30,7 +30,7 @@ function Extension({ mode = "" }) {
 
   function closeExtension() {
     window.close();
-//    browser.runtime.sendMessage({ action: "background_closeExtension" });
+    browser.runtime.sendMessage({ action: "background_closeExtension" });
   }
 
   if (mode === "product") {
