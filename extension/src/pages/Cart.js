@@ -180,7 +180,7 @@ function Cart() {
           </div>
 
           <div className="flex align-center mt-4 ml-5">
-            <img src="/images/c02.svg" alt="CO2 Logo" />
+            <img src="/images/c02.svg" alt="CO2 Logo" width="16.82"/>
             <ItemGHG>{totalGHG}kg</ItemGHG>
             <OfCO2Expr>of CO2</OfCO2Expr>
             <ProducedExpr className="self-end">produced</ProducedExpr>

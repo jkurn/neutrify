@@ -16,7 +16,7 @@ const CartItemProduct = styled.div`
 `;
 
 const ItemName = styled.div`
-  margin-left: 6px;
+  margin-left: 9.5px;
   font-size: 10.01px;
   color: rgba(0, 0, 0, 0.8);
 `;
@@ -30,7 +30,7 @@ const CartItemGHG = styled.div`
 
 const ItemDesc = styled.div`
   font-size: 6.67px;
-  margin-left: 6px;
+  margin-left: 4px;
 `;
 
 const PerServing = styled.div`
@@ -62,13 +62,13 @@ function CartItem({ imageURL, title, description, serving, ghg }) {
   return (
     <CartItemContainer>
       <CartItemProduct className="flex items-center font-semibold">
-        <img src={imageURL} alt={title} />
+        <img src={imageURL} alt={title} width="16.82"/>
         <ItemName>{title}</ItemName>
         {typeof description !== "undefined" ? <ItemDesc>({description})</ItemDesc> : null}
         <PerServing>per {serving}</PerServing>
       </CartItemProduct>
       <CartItemGHG className="flex items-center">
-        <img src="/images/c02.svg" alt="C02" />
+        <img src="/images/c02.svg" alt="C02" width="16.82"/>
         <ItemGHG>{ghg}kg</ItemGHG>
         <OfCO2Expr className="flex">of CO2</OfCO2Expr>
         <ProducedExpr>produced</ProducedExpr>
