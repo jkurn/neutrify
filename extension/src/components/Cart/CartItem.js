@@ -10,13 +10,15 @@ const CartItemContainer = styled.div`
 const CartItemProduct = styled.div`
   border-radius: 3.7px 3.7px 0px 0px;
   background: #f4f7fb;
-  border: 1px solid #dae0e8;
   border-bottom: 0px;
   padding: 3px 15px;
+  width: 232px;
+  margin-left: -2px;
 `;
 
 const ItemName = styled.div`
   margin-left: 9.5px;
+  margin-top: 2.5px;
   font-size: 10.01px;
   color: rgba(0, 0, 0, 0.8);
 `;
@@ -24,8 +26,10 @@ const ItemName = styled.div`
 const CartItemGHG = styled.div`
   border-radius: 0px 0px 3.7px 3.7px;
   background: #f4f7fb;
-  border: 1px solid #dae0e8;
-  padding: 5px 15px;
+  border-top: 0.737705px solid rgba(157, 171, 187, 0.3);
+  padding: 5px 15px 6px;
+  width: 232px;
+  margin-left: -2px;
 `;
 
 const ItemDesc = styled.div`
@@ -36,6 +40,7 @@ const ItemDesc = styled.div`
 const PerServing = styled.div`
   font-size: 8.93px;
   margin-left: 7px;
+  margin-top: 1px;
   color: rgba(0, 0, 0, 0.6);
 `;
 
@@ -56,7 +61,9 @@ const ProducedExpr = styled.div`
   font-weight: 600;
   font-size: 7.15px;
   margin-left: 5px;
+  margin-top: 1px;
 `;
+
 
 function CartItem({ imageURL, title, description, serving, ghg }) {
   return (
