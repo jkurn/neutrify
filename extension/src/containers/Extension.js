@@ -2,18 +2,24 @@ import styled from "styled-components";
 import { useState } from "react";
 
 import Nav from "../components/Nav";
-import Header from "../components/Header";
+import {Header} from "../components/Header";
 
 import Cart from "../pages/Cart";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
 import Product from "../pages/Product";
+//import ProductDetails from "../pages/ProductDetails";
+
   // width: 315px;
   // min-height: 558px;
+
+  // width: 100%;
+  // min-width: 315px;
+  // height: 558px;
+
 const ExtensionContainer = styled.div`
-  width: 100%;
-  min-width: 315px;
-  height: 558px;
+  width: 247px;
+  min-height: 322px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   background: white;
@@ -24,7 +30,7 @@ function Extension({ mode = "" }) {
 
   function closeExtension() {
     window.close();
-    browser.runtime.sendMessage({ action: "background_closeExtension" });
+//    browser.runtime.sendMessage({ action: "background_closeExtension" });
   }
 
   if (mode === "product") {
