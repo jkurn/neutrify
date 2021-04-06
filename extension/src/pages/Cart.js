@@ -164,7 +164,7 @@ function Cart() {
             <CartItem
               imageURL="/images/beef.svg"
               title={cartItem.name}
-              // description="Natural Choice"
+              description="Natural Choice"
               serving="1 kg"
               ghg={cartItem.carbon}
             />
