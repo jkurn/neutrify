@@ -14,12 +14,12 @@ const AltItemContainer = styled.div`
 
 const AltItemTitle = styled.div`
   margin-left: 10px;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(0, 0, 0, 0.8);
 `;
 
 const AltItemDesc = styled.div`
-  font-size: 8px;
+  font-size: 9px;
   margin-left: 3px;
 `;
 

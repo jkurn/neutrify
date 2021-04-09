@@ -14,25 +14,24 @@ const CartSection = styled.div`
 const ItemGHG = styled.div`
   color: #7492b6;
   font-weight: 550;
-  font-size: 11.7px;
+  font-size: 15px;
   margin-left: 10px;
 `;
 
 const OfCO2Expr = styled.div`
   font-weight: 550;
-  font-size: 11.7px;
+  font-size: 15px;
   margin-left: 5px;
 `;
 
 const ProducedExpr = styled.div`
   font-weight: 550;
-  font-size: 7.15px;
+  font-size: 12px;
   margin-left: 5px;
-  margin-bottom: 3px;
 `;
 
 const TotalContainer = styled.div`
-  background: #F9F9FA;
+  background: #ececec;
   padding: 10px;
   padding-bottom: 17px;
   margin: 10px 0;
@@ -40,11 +39,6 @@ const TotalContainer = styled.div`
 
 const ShowBreakdown = styled.a`
   color: #192642;
-  font-size: 6px;
-`;
-
-const BasedOnCart = styled.a`
-  font-size: 7.377px;
 `;
 
 function Cart() {
@@ -159,12 +153,12 @@ function Cart() {
         as="div"
       >
         <CartSection>
-          <BasedOnCart className="font-semibold text-n-lightGrey mb-2">BASED ON YOUR CART TODAY</BasedOnCart>
+          <h1 className="text-xs font-semibold text-gray-500 mb-2">BASED ON YOUR CART TODAY</h1>
           {cartWithGHG.map((cartItem) => (
             <CartItem
               imageURL="/images/beef.svg"
               title={cartItem.name}
-              description="Natural Choice"
+              // description="Natural Choice"
               serving="1 kg"
               ghg={cartItem.carbon}
             />
@@ -173,14 +167,14 @@ function Cart() {
 
         <TotalContainer>
           <div className="flex items-center justify-between">
-            <h1 className="text-2.4xs text-n-lightGrey font-semibold">TOTAL PURCHASE EMISSIONS</h1>
-            <ShowBreakdown href="#" className="font-semibold underline ml-5">
+            <h1 className="text-2xs text-gray-500 font-semibold">TOTAL PURCHASE EMISSIONS</h1>
+            <ShowBreakdown href="#" className="text-3xs text-xs font-semibold underline ml-12">
               SHOW BREAKDOWN
             </ShowBreakdown>
           </div>
 
           <div className="flex align-center mt-4 ml-5">
-            <img src="/images/c02.svg" alt="CO2 Logo" width="16.82"/>
+            <img src="/images/c02.svg" alt="CO2 Logo" />
             <ItemGHG>{totalGHG}kg</ItemGHG>
             <OfCO2Expr>of CO2</OfCO2Expr>
             <ProducedExpr className="self-end">produced</ProducedExpr>
@@ -188,8 +182,8 @@ function Cart() {
         </TotalContainer>
 
         <CartSection>
-          <h1 className="text-2.4xs font-semibold text-n-green mb-1">SUGGESTED ALTERNATIVES</h1>
-          <h1 className="text-2xs font-semibold ml-1 mb-4 text-n-aquablue">
+          <h1 className="text-2xs font-semibold text-n-green mb-1">SUGGESTED ALTERNATIVES</h1>
+          <h1 className="text-xs font-semibold ml-1 mb-4 text-n-aquablue">
             <img src="/images/star.svg" alt="Star" className="mb-1 mr-1 inline-flex items-center" />
             124 shoppers have shopped carbon conscious!
           </h1>

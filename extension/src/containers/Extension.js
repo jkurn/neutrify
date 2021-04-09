@@ -17,8 +17,11 @@ import Product from "../pages/Product";
   // min-width: 315px;
   // height: 558px;
 
+  //  width: 247px;
+
+
 const ExtensionContainer = styled.div`
-  width: 247px;
+  width: 315px;
   min-height: 322px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
