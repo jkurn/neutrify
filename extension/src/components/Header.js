@@ -24,6 +24,10 @@ const CloseIcon = styled.img`
   right: 10px;
 `;
 
+//<ProgressLiquid className="ml-3 font-medium text-xs flex items-center justify-center">
+//  0<span className="text-3xs">%</span>
+//</ProgressLiquid>
+
 function Header({ closeExtension }) {
   return (
     <HeaderContainer className="flex items-center">
@@ -37,9 +41,6 @@ function Header({ closeExtension }) {
           Learn more
         </a>
       </div>
-      <ProgressLiquid className="ml-3 font-medium text-xs flex items-center justify-center">
-        0<span className="text-3xs">%</span>
-      </ProgressLiquid>
       <CloseIcon
         className="cursor-pointer"
         onClick={() => closeExtension()}
