@@ -1,17 +1,19 @@
 import deleteAllExtensions from "./deleteAllExtensions";
+import deleteAllStylesheets from "./deleteAllStylesheets";
 
-export default function generateExtensionController() {
+export default function generateIframeController() {
   const styles = `
     .neutrify {
         position: fixed;
         top: 200px;
         width: 315px;
-        height: 558px;
+        min-height: 558px;
         border: none;
         box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
         border-radius: 5px;
         z-index: 9999;
         display: block;
+        height: unset;
     }
 
     .neutrify-cart {
@@ -20,21 +22,32 @@ export default function generateExtensionController() {
 
     .neutrify-checkout {
         left: 60px;
-        display: block;
+    }
+
+    .neutrify-extension-prompt {
+      position: fixed;
+      top: 50%;
+      width: 74px;
+      height: 74px;
+      left: 0;
+      border: none;
+      z-index: 9999;
+      display: block;
     }
 `;
 
   if (window.location.host === "www.instacart.com") {
+    deleteAllExtensions();
+    deleteAllStylesheets();
     injectCSS(styles);
+    // generateIframe("neutrify-extension-prompt", "prompt.html");
 
-    let iframeExtension;
     let currentBrowserURL = window.location.href;
 
     if (currentBrowserURL.includes("checkout")) {
-      iframeExtension = generateExtension("neutrify-checkout");
+      generateIframe("neutrify neutrify-checkout");
     } else if (currentBrowserURL.includes("items")) {
-      iframeExtension = generateExtension("neutrify-item-detail", "product.html");
-
+      generateIframe("neutrify neutrify-item-detail", "product.html");
       let productId = currentBrowserURL.split("item_")[1];
 
       browser.runtime.sendMessage({ action: "background_getProductDetails", data: { productId } });
@@ -51,10 +64,11 @@ export default function generateExtensionController() {
 
               // Delete all extensions if cart is no longer active, else instantiate extension beside cart
               if (currentStyleState === "translateX(0px)") {
-                iframeExtension = generateExtension("neutrify-cart");
-                document.getElementsByTagName("body")[0].appendChild(iframeExtension);
+                generateIframe("neutrify neutrify-cart");
+                // generateIframe("neutrify-extension-prompt", "prompt.html");
               } else {
                 deleteAllExtensions();
+                // generateIframe("neutrify-extension-prompt", "prompt.html");
               }
             }
           }
@@ -63,12 +77,17 @@ export default function generateExtensionController() {
       observer.observe(cartContainer, { attributes: true });
     }
 
-    document.getElementsByTagName("body")[0].appendChild(iframeExtension);
+
+    // document.getElementsByClassName('neutrify-extension-prompt')[0].addEventListener('click', function() {
+    //   document.getElementsByClassName('neutrify')[0].style.display = "block";
+    // })
+
+    // document.getElementsByTagName("body")[0].appendChild(iframeExtension);
   }
 }
 
 // Generate extensions using iframe, with additional optional class
-function generateExtension(extraClass, page = "popup.html") {
+function generateIframe(extraClass, page = "popup.html") {
   let iframe;
 
   // // Reuse any existing extension, if applicable
@@ -79,19 +98,18 @@ function generateExtension(extraClass, page = "popup.html") {
   //   iframe = document.getElementsByClassName("neutrify")[0];
   // }
 
-  deleteAllExtensions();
-
   iframe = document.createElement("iframe");
   iframe.src = chrome.extension.getURL(page);
 
-  iframe.className = `neutrify ${extraClass}`;
+  iframe.className = extraClass;
 
-  return iframe;
+  document.getElementsByTagName("body")[0].appendChild(iframe);
 }
 
 // Inject new CSS by creating a style tag
 function injectCSS(styles) {
   let styleSheet = document.createElement("style");
+  styleSheet.classList.add('neutrify-style');
   styleSheet.innerText = styles;
   document.head.appendChild(styleSheet);
 }

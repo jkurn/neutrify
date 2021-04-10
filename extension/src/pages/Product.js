@@ -156,7 +156,7 @@ function Product() {
     );
   } else {
     return (
-      <h1 className="w-6/12 text-center mx-auto">No items which emits GHG have been detected</h1>
+      <h1 className="w-6/12 text-center mx-auto flex-1 flex items-center">No items which emits GHG have been detected</h1>
     );
   }
 }

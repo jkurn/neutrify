@@ -18,10 +18,11 @@ function customOverride(config, env) {
   // Note: you may remove any property below except "popup" to exclude respective entry point from compilation
   config.entry = {
     popup: paths.appIndexJs,
-    options: paths.appSrc + "/options.js",
     background: paths.appSrc + "/background_scripts/background.js",
     content: paths.appSrc + "/content_scripts/content.js",
+    options: paths.appSrc + "/options.js",
     product: paths.appSrc + "/product.js",
+    prompt: paths.appSrc + "/prompt.js",
   };
   // Change output filename template to get rid of hash there
   config.output.filename = "static/js/[name].js";
@@ -84,6 +85,16 @@ function customOverride(config, env) {
   });
 
   config.plugins.push(productHtmlPlugin);
+
+  const promptHtmlPlugin = new HtmlWebpackPlugin({
+    inject: true,
+    chunks: ["prompt"],
+    template: paths.appPublic + "/prompt.html",
+    filename: "prompt.html",
+    minify: isEnvProduction && minifyOpts,
+  });
+
+  config.plugins.push(promptHtmlPlugin);
 
   // Custom ManifestPlugin instance to cast asset-manifest.json back to old plain format
   const manifestPlugin = new ManifestPlugin({
