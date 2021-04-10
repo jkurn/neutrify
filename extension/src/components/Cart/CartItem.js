@@ -57,6 +57,7 @@ const ProducedExpr = styled.div`
   margin-left: 5px;
 `;
 
+
 function CartItem({ imageURL, title, description, serving, ghg }) {
   return (
     <CartItemContainer>
@@ -75,5 +76,6 @@ function CartItem({ imageURL, title, description, serving, ghg }) {
     </CartItemContainer>
   );
 }
+
 
 export default CartItem;

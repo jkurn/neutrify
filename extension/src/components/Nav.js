@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const NavContainer = styled.div`
-  background: #e4edf1;
-  padding: 12px 43px;
+  background: #BEDFC7;
+  padding: 15px 43px;
+  border-radius: 5px 5px 0px 0px;
 `;
 
 const NavIcon = styled.svg`
@@ -19,7 +20,7 @@ function Nav({ setCurrentPage, currentPage }) {
         width="20"
         height="18"
         viewBox="0 0 20 18"
-        fill={currentPage === "Cart" ? "#0085FF" : "#8E99A6"}
+        fill={currentPage === "Cart" ? "#108F6E" : "#FFFFFF"}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path d="M19.822 4.431C19.73 4.29808 19.6072 4.18943 19.464 4.11436C19.3209 4.0393 19.1616 4.00006 19 4H5.333L4.179 1.23C4.02769 0.865226 3.77147 0.553593 3.44282 0.334615C3.11418 0.115638 2.72791 -0.00082104 2.333 4.35724e-06H0V2H2.333L7.077 13.385C7.15299 13.5672 7.28118 13.7228 7.44542 13.8322C7.60967 13.9416 7.80263 14 8 14H16C16.417 14 16.79 13.741 16.937 13.352L19.937 5.352C19.9937 5.20063 20.0129 5.03776 19.9928 4.87735C19.9728 4.71695 19.9142 4.56379 19.822 4.431Z" />
@@ -32,13 +33,13 @@ function Nav({ setCurrentPage, currentPage }) {
         height="17"
         viewBox="0 0 19 17"
         xmlns="http://www.w3.org/2000/svg"
-        fill={currentPage === "Home" ? "#0085FF" : "#8E99A6"}
+        fill={currentPage === "Home" ? "#108F6E" : "#FFFFFF"}
       >
         <path d="M17.6321 8.36072L9.45157 0.186175C9.39267 0.127158 9.32271 0.0803364 9.24569 0.0483901C9.16867 0.0164437 9.08611 0 9.00272 0C8.91934 0 8.83678 0.0164437 8.75976 0.0483901C8.68274 0.0803364 8.61278 0.127158 8.55388 0.186175L0.373376 8.36072C0.135051 8.59905 0 8.92277 0 9.2604C0 9.96147 0.569994 10.5315 1.27107 10.5315H2.13301V16.3645C2.13301 16.716 2.41701 17 2.76854 17H7.73166V12.5513H9.95603V17H15.2369C15.5884 17 15.8724 16.716 15.8724 16.3645V10.5315H16.7344C17.072 10.5315 17.3957 10.3984 17.6341 10.1581C18.1286 9.66158 18.1286 8.85723 17.6321 8.36072Z" />
       </NavIcon>
       <NavIcon
         onClick={() => setCurrentPage("Settings")}
-        fill={currentPage === "Settings" ? "#0085FF" : "#8E99A6"}
+        fill={currentPage === "Settings" ? "#108F6E" : "#FFFFFF"}
         width="17"
         height="18"
         viewBox="0 0 17 18"

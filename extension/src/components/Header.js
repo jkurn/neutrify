@@ -2,16 +2,20 @@ import React from "react";
 import styled from "styled-components";
 
 const HeaderContainer = styled.div`
-  padding: 10px;
+  padding: 15px;
   border-bottom: 2px solid #ececec;
+  background: #108F6E;
+  border-radius: 0px 0px 5px 5px;
 `;
 
+//  width: 40px;
+//  height: 40px;
 const ProgressLiquid = styled.div`
   background: #f4f7fb;
   border: 1px solid rgba(157, 171, 187, 0.3);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 33px;
+  height: 33px;
 `;
 
 const CloseIcon = styled.img`
@@ -20,29 +24,48 @@ const CloseIcon = styled.img`
   right: 10px;
 `;
 
+//<ProgressLiquid className="ml-3 font-medium text-xs flex items-center justify-center">
+//  0<span className="text-3xs">%</span>
+//</ProgressLiquid>
+
 function Header({ closeExtension }) {
   return (
     <HeaderContainer className="flex items-center">
-      <img src="/images/logo.svg" alt="Neutrify Logo" />
+      <img src="/images/newLogo.svg" alt="Neutrify Logo" width="45" />
       <div className="flex flex-col justify-center">
-        <h1 className="text-2xl font-semibold">Neutrify</h1>
+        <h1 className="text-xl font-semibold text-white ml-4">Neutrify</h1>
         <a
           href="https://mailchi.mp/c11c1b6d22f8/neutrify-launch"
-          className="text-n-turqoise text-xs font-semibold underline"
+          className="text-white text-xs font-medium ml-4 -mt-1.5"
         >
           Learn more
         </a>
       </div>
-      <ProgressLiquid className="ml-3 font-semibold text-xs flex items-center justify-center">
-        0<span className="text-3xs">%</span>
-      </ProgressLiquid>
       <CloseIcon
         className="cursor-pointer"
         onClick={() => closeExtension()}
-        src="images/close.svg"
+        src="images/closeWhite.svg"
       />
     </HeaderContainer>
   );
 }
 
-export default Header;
+function HeaderProdDetail() {
+  return (
+    <HeaderContainer className="flex items-center">
+      <img src="/images/newLogo.svg" alt="Neutrify Logo" width="38.57"/>
+      <div className="flex flex-col justify-center">
+        <h1 className="text-2xl font-semibold text-white ml-4">Neutrify</h1>
+        <a
+          href="https://mailchi.mp/c11c1b6d22f8/neutrify-launch"
+          className="text-white text-xs ml-4 -mt-1 font-medium"
+        >
+          Learn more
+        </a>
+      </div>
+      <CloseIcon className="cursor-pointer" onClick={() => window.close()} src="images/closeWhite.svg" />
+    </HeaderContainer>
+  );
+}
+
+export {Header, HeaderProdDetail};
