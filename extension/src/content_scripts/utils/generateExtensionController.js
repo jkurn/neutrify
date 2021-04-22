@@ -64,9 +64,11 @@ export default function generateIframeController() {
 
               // Delete all extensions if cart is no longer active, else instantiate extension beside cart
               if (currentStyleState === "translateX(0px)") {
+
                 generateIframe("neutrify neutrify-cart");
                 // generateIframe("neutrify-extension-prompt", "prompt.html");
               } else {
+
                 deleteAllExtensions();
                 // generateIframe("neutrify-extension-prompt", "prompt.html");
               }
@@ -88,6 +90,8 @@ export default function generateIframeController() {
 
 // Generate extensions using iframe, with additional optional class
 function generateIframe(extraClass, page = "popup.html") {
+  deleteAllExtensions();
+
   let iframe;
 
   // // Reuse any existing extension, if applicable

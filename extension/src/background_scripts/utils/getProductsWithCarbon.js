@@ -21,15 +21,19 @@ export default function getProductsWithCarbon (messageData, sendResponse) {
           await axios.get(`${API_ENDPOINT}/products/get/${rawCartItemId}`, {
             headers: {
               apiskey: process.env.REACT_APP_API_SECRET_KEY,
+              'Access-Control-Allow-Origin' : '*',
             },
           })
         ).data;
 
-        let finalCartItem = data.product;
+        let { status } = data;
 
         // Update only if the product exists in the backend
         // TODO: Remove "Beef" type checking in the future (this is hardcoded for MVP purposes)
-        if (finalCartItem !== "" && rawCartItem.type === "Beef") {
+        if (status === true) {
+
+          let { product:finalCartItem } = data;
+
           // Multiply ghg according to quantity and set it in state
           let newTotalGHG = finalCartItem.carbon * rawCartItem.quantity;
           totalGHG += newTotalGHG;
