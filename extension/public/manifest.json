@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
   "name": "Neutrify",
-  "version": "0.1",
+  "version": "0.1.2",
 
   "description": "Neutrify MVP",
-  "homepage_url": "https://github.com/behjieshen/neutrify",
+  "homepage_url": "https://github.com/jkurn/neutrify",
   "icons": {
     "48": "images/extension-48.png"
   },
 
-  "permissions": ["tabs", "cookies", "webRequest", "<all_urls>"],
+  "permissions": ["tabs", "cookies", "webRequest", "activeTab", "*://*.instacart.com/*"],
 
   "browser_action": {
     "default_icon": "images/extension-48.png",

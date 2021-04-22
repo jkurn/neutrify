@@ -128,7 +128,7 @@ function Cart() {
   }
   // 2. User is not logged in
   else if (isLoggedIn === false) {
-    return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged in</h1>;
+    return <h1 className="w-6/12 text-center mx-auto">Please make sure you are logged into instacart.com and is currently on instacart.com to activate the extension</h1>;
   }
   // 3. User has nothing in the cart
   else if (!rawCart || (rawCart && rawCart.length === 0)) {
@@ -168,9 +168,9 @@ function Cart() {
         <TotalContainer>
           <div className="flex items-center justify-between">
             <h1 className="text-2xs text-gray-500 font-semibold">TOTAL PURCHASE EMISSIONS</h1>
-            <ShowBreakdown href="#" className="text-3xs text-xs font-semibold underline ml-12">
+            {/* <ShowBreakdown href="#" className="text-3xs text-xs font-semibold underline ml-12">
               SHOW BREAKDOWN
-            </ShowBreakdown>
+            </ShowBreakdown> */}
           </div>
 
           <div className="flex align-center mt-4 ml-5">
@@ -209,8 +209,8 @@ function Cart() {
     );
   } else {
     return (
-      <h1 className="w-6/12 text-center mx-auto flex-1">
-        No items which emits GHG have been detected
+      <h1 className="w-6/12 text-center mx-auto flex-1 flex items-center">
+        Product(s) has/have no GHG data at the moment.
       </h1>
     );
   }

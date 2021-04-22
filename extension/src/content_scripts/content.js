@@ -2,26 +2,20 @@ import generateExtensionController from "./utils/generateExtensionController";
 import getLocalStorageData from "./utils/getLocalStorageData";
 import deleteAllExtensions from "./utils/deleteAllExtensions";
 
-// Detect URL change using MutationsAPI and call main()
+// Detect URL change and call main()
 function websiteURLHandler() {
-  let oldHref = document.location.href;
-
-  let bodyList = document.querySelector("body"),
-    observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        if (oldHref != document.location.href) {
-          oldHref = document.location.href;
+  let currentUrl = window.location.href;
+ 
+  // Listen for changes
+  setInterval(function()
+  {
+      if (currentUrl != window.location.href)
+      {
+          currentUrl = window.location.href;
           main();
-        }
-      });
-    });
+      }
+  }, 500);
 
-  let config = {
-    childList: true,
-    subtree: true,
-  };
-
-  observer.observe(bodyList, config);
 }
 
 // Main function to instantiate extension based on URL
